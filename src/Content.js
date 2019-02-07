@@ -15,17 +15,54 @@ class Content extends Component {
       allResults: []
     };
 
-    this.setStateHandlerSearch = this.setStateHandlerSearch.bind(this);
-    this.setStateHandlerList = this.setStateHandlerList.bind(this);
+    // this.setStateHandlerSearch = this.setStateHandlerSearch.bind(this);
+    // this.setStateHandlerList = this.setStateHandlerList.bind(this);
   };
 
-  setStateHandlerSearch(userId, results) {
-    this.setState({ userId: userId, results: results});
-  };
+  setStateHandlerChange = (userId) => {
+    this.setState({ userId: userId })
+  }
 
-  setStateHandlerList(allResults) {
-    this.setState({ allResults: allResults});
-  };
+  setStateHandlerSearch = (userId, results) => {
+    this.setState({ userId: userId, results: results });
+  }
+
+  setStateHandlerList = (allResults) => {
+    this.setState({ allResults: allResults });
+  }
+
+  handleChange = (event) => {
+    console.log("Input value has been changed")
+    this.setStateHandlerChange(event.target.value);
+  }
+
+  handleSearch = () => {
+    console.log("Search clicked - UserId: " + this.state.userId);
+
+    fetch("https://reqres.in/api/users/" + this.state.userId)
+      .then(data => data.json())
+      .then(results => {
+        this.setStateHandlerSearch(this.state.userId, results.data);
+      })
+      .catch(error => {
+        this.setStateHandlerSearch(this.state.userId, undefined);
+        alert("APIRest Error");
+      });
+  }
+
+  handleList = () => {
+    console.log("Search clicked for all");
+
+    fetch("https://reqres.in/api/users?page=2")
+      .then(data => data.json())
+      .then(results => {
+        this.setStateHandlerList(results.data);
+      })
+      .catch(error => {
+        this.setStateHandlerList([]);
+        alert("APIRest Error");
+      });
+  }
 
   render() {
     return (
@@ -33,10 +70,11 @@ class Content extends Component {
         <p>
           First React App:
         </p>
-
-        <SearchUser stateProp={this.state}
-                    setStateHandlerSearchProp={this.setStateHandlerSearch}
-                    setStateHandlerListProp={this.setStateHandlerList}
+        
+        <SearchUser userIdProp={this.state.userId}
+          handleChangeProp={(event) => this.handleChange(event)}
+          handleSearchProp={() => this.handleSearch()}
+          handleListProp={() => this.handleList()}
         />
 
         <Divider horizontal>
