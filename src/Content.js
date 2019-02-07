@@ -64,13 +64,17 @@ class Content extends Component {
       });
   }
 
+  componentDidMount() {
+    this.handleList();
+  }
+
   render() {
     return (
       <Container>
         <p>
           First React App:
         </p>
-        
+
         <SearchUser userIdProp={this.state.userId}
           handleChangeProp={(event) => this.handleChange(event)}
           handleSearchProp={() => this.handleSearch()}
@@ -89,7 +93,7 @@ class Content extends Component {
 
       </Container>
     );
-
   }
+
 }
 export default Content;
